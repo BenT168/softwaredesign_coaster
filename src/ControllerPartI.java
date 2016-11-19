@@ -24,8 +24,8 @@ public class ControllerPartI {
     }
 
     public int getPassengers(int mcar) throws InterruptedException{
-        if (mcar < 0) return 0; // neg invalid capacity, isnt allowed to take passenger
-        while (numPassenger < mcar) wait(); // wait for enough passenger to fill up car
+        if (mcar < 0) return 0; // neg invalid capacity, isnt allowed to take people
+        while (numPassenger < mcar) wait(); // wait 4 enough passenger to fill up car
         numPassenger -= mcar; // update number of waiting passenger
         passengers.setValue(numPassenger); // update displayed passenger's number
         notifyAll(); // notify other that passengers had went on board

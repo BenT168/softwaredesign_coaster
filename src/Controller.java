@@ -26,7 +26,7 @@ public class Controller {
     }
 
     public int getPassengers(int mcar) throws InterruptedException{
-        if (mcar < 0) return 0;  // neg invalid capacity, isnt allowed to take passenger
+        if (mcar < 0) return 0;  // neg invalid capacity, isnt allowed to take people
 
         // wait for enough passenger to fill up the car
         while (numPassenger < mcar && !button) wait();
