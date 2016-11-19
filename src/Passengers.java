@@ -11,19 +11,19 @@ import display.*;
 
 public class Passengers implements Runnable {
 
-  protected Controller control;
+    protected Controller control;
 
-  public Passengers(Controller c) {
-     control =c;
-  }
+    public Passengers(Controller c) {
+         control =c;
+      }
 
-  public void run() {
-    try {
-       while (true) {
-          ThreadPanel.rotate(120);
-          control.newPassenger();
-          ThreadPanel.rotate(240);
-       }
-    } catch (InterruptedException e) {}
-  }
+    public void run() {
+        try {
+            while (true) {
+                ThreadPanel.rotate(120);
+                control.newPassenger();
+                ThreadPanel.rotate(240);
+           }
+        } catch (InterruptedException e) {}
+    }
 }

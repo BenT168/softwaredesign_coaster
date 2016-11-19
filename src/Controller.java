@@ -4,37 +4,50 @@
  * Complete the implementation of this class in line with the FSP model
  */
 
+
 import display.NumberCanvas;
 
 public class Controller {
 
-  public static int Max = 9;
-  protected NumberCanvas passengers;
-  protected int numPassenger = 0;
+    public static int Max = 9;
+    protected NumberCanvas passengers;
+    protected int numPassenger = 0;
+    protected boolean button = false;
 
-  public Controller(NumberCanvas nc) {
-    passengers = nc;
-  }
+    public Controller(NumberCanvas nc) {
+        passengers = nc;
+    }
 
-  public void newPassenger() throws InterruptedException {
-      while (numPassenger >= Max) wait(); // wait if the platform is fully accommodated
-      numPassenger++; // increment the number of waiting passengers
-      passengers.setValue(numPassenger); // update the displayed passenger's number
-      notifyAll(); // notify others that a new waiting passenger is added
-  }
+    public void newPassenger() throws InterruptedException {
+        while (numPassenger >= Max) wait(); // wait if platform is fully accommodated
+        numPassenger++; // increment number of waiting passengers
+        passengers.setValue(numPassenger); // update displayed passenger's number
+        notifyAll(); // notify others that a new waiting passenger is added
+    }
 
-  public int getPassengers(int mcar) throws InterruptedException{
-      if (mcar < 0) throw new InterruptedException("ERROR: " +
-              "the given car capacity is negative.");
-      while (numPassenger < mcar) wait(); // wait for enough passenger to depart
-      numPassenger -= mcar; // update the number of waiting passenger
-      passengers.setValue(numPassenger); // update the displayed passenger's number
-      notifyAll(); // notify other that passengers had went on board
-      return mcar; // return the number of passenger got into the car
-  }
+    public int getPassengers(int mcar) throws InterruptedException{
+        if (mcar < 0) return 0;  // neg invalid capacity, isnt allowed to take passenger
 
-  public synchronized void goNow() {
-    // complete implementation for part II
-  }
+        // wait for enough passenger to fill up the car
+        while (numPassenger < mcar && !button) wait();
+
+        // button is pressed w/o waiting for enough passenger to fill up the car
+        if (button && numPassenger < mcar) {
+            mcar = numPassenger; // car capacity is restricted to numPassenger
+        }
+
+        numPassenger -= mcar; // update number of waiting passenger
+        button = false; // release the button after being called
+        passengers.setValue(numPassenger); // update displayed passenger's number
+        notifyAll(); // notify other that passengers had went on board
+        return mcar; // return the number of passenger got into the car
+    }
+
+    public synchronized void goNow() {
+        if (numPassenger > 0) { // ensure that there is at least 1 passenger
+            button = true; // signify that button is pressed
+            notifyAll(); // notify other that the car can go now
+        }
+    }
 
 }
