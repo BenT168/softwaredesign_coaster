@@ -7,7 +7,7 @@
 public class PlatformAccess {
 
     // Flag determining whether there is a car waiting on the platform
-    protected boolean platformOccupied;
+    protected boolean platformOccupied = false;
 
     public void arrive() throws InterruptedException {
         while (platformOccupied) wait(); // wait if there's a car on platform
