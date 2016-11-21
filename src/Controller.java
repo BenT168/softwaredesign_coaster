@@ -1,21 +1,21 @@
-
-
-/**
- * Complete the implementation of this class in line with the FSP model
- */
-
-
 import display.NumberCanvas;
 
 public class Controller {
 
-    public static int Max = 9;
     protected NumberCanvas passengers;
-    protected int numPassenger = 0;
+
+    //Max number of passengers
+    public static int Max = 9;
+
+    //Current number of passengers on the platform
+    public int numPassenger;
+
+    //Boolean allowing car to leave early
     protected boolean button = false;
 
     public Controller(NumberCanvas nc) {
         passengers = nc;
+        numPassenger = 0;
     }
 
     public void newPassenger() throws InterruptedException {

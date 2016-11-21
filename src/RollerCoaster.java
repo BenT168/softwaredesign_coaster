@@ -11,8 +11,7 @@ public class RollerCoaster {
         //Pack frames that have useful preferred size info, e.g. from their layout
         if (packFrame) {
             frame.pack();
-        }
-        else {
+        } else {
             frame.validate();
         }
         //Center the window
