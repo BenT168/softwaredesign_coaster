@@ -1,5 +1,3 @@
-
-
 import display.NumberCanvas;
 
 public class ControllerPartI {
