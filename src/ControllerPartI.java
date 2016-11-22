@@ -8,7 +8,7 @@ public class ControllerPartI {
     public static int Max = 9;
 
     //Current number of passengers on the platform
-    public int numPassenger;
+    protected int numPassenger;
 
     public ControllerPartI(NumberCanvas nc) {
         passengers = nc;

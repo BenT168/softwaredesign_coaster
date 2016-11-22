@@ -8,7 +8,7 @@ public class Controller {
     public static int Max = 9;
 
     //Current number of passengers on the platform
-    public int numPassenger;
+    protected int numPassenger;
 
     //Boolean allowing car to leave early
     protected boolean button = false;
