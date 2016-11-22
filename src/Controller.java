@@ -15,7 +15,6 @@ public class Controller {
 
     //Lock object
     private final Object lock = new Object();
-    private final Object entryLock = new Object();
 
     public Controller(NumberCanvas nc) {
         passengers = nc;
@@ -43,9 +42,9 @@ public class Controller {
 
         // button is not pressed & the waiting passenger is less than the car capacity
         while (numPassenger < mcar && !button) {
-            synchronized (entryLock){
+            synchronized (lock){
                 // wait for enough passenger to fill up the car
-                entryLock.wait();
+                lock.wait();
             }
         }
 
