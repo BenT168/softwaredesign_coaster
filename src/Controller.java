@@ -50,7 +50,19 @@ public class Controller {
 
         // button is pressed w/o waiting for enough passenger to fill up the car
         if (button && numPassenger < mcar) {
-            mcar = numPassenger; // car capacity is restricted to numPassenger
+            //Fetch number of available passengers
+            int passCnt = numPassenger;
+            //Remove passengers from platform and update number canvas
+            numPassenger = numPassenger - passCnt;
+            passengers.setValue(numPassenger);
+            synchronized (entryLock){
+                //Wake up entry lock in case it is waiting
+                entryLock.notify();
+            }
+            //Reset go now boolean
+            button = false;
+            //Return the number of passengers that were put into the car
+            return passCnt;
         }
 
         numPassenger -= mcar; // update number of waiting passenger
