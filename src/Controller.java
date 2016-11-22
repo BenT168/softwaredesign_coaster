@@ -10,8 +10,12 @@ public class Controller {
     //Current number of passengers on the platform
     protected int numPassenger;
 
+    //Size of the car
+    private int carSize;
+
     //Boolean allowing car to leave early
     protected boolean button = false;
+
 
     public Controller(NumberCanvas nc) {
         passengers = nc;
@@ -29,9 +33,10 @@ public class Controller {
 
         // wait for enough passenger to fill up the car
         while (numPassenger < mcar && !button) wait();
+        carSize = mcar;
 
         // button is pressed w/o waiting for enough passenger to fill up the car
-        if (button && numPassenger < mcar) {
+        if (button) {
             mcar = numPassenger; // car capacity is restricted to numPassenger
         }
 
@@ -43,7 +48,8 @@ public class Controller {
     }
 
     public synchronized void goNow() {
-        if (numPassenger > 0) { // ensure that there is at least 1 passenger
+        // ensure that there is at least 1 passenger
+        if (numPassenger > 0 && numPassenger < carSize) {
             button = true; // signify that button is pressed
             notifyAll(); // notify other that the car can go now
         }
