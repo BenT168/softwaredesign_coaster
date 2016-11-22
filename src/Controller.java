@@ -30,7 +30,7 @@ public class Controller {
     }
 
     public synchronized int getPassengers(int mcar) throws InterruptedException{
-        if (mcar <= 0) return 0;  // invalid capacity, car isnt allowed to take people
+        if (mcar <= 0) return 0; // invalid capacity, car isnt allowed to take people
         carSize = mcar;
 
         // wait for enough passenger to fill up the car
@@ -49,7 +49,7 @@ public class Controller {
     }
 
     public synchronized void goNow() {
-        // ensure that there is at least 1 passenger
+        // ensure that there is at least 1 passenger but less than car size
         if (numPassenger > 0 && numPassenger < carSize) {
             button = true; // signify that button is pressed
             notifyAll(); // notify other that the car can go now
