@@ -6,7 +6,6 @@ public class PlatformAccess {
     public synchronized void arrive() throws InterruptedException {
         while (platformOccupied) wait(); // wait if there's a car on platform
         platformOccupied = true; // signify that there is a car on platform
-        notifyAll(); // notify other cars that a car had arrived
     }
 
     public synchronized void depart() {

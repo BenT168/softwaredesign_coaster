@@ -19,6 +19,7 @@ public class Controller {
 
     public Controller(NumberCanvas nc) {
         passengers = nc;
+        numPassenger = 0;
     }
 
     public synchronized void newPassenger() throws InterruptedException {
@@ -30,13 +31,13 @@ public class Controller {
 
     public synchronized int getPassengers(int mcar) throws InterruptedException{
         if (mcar <= 0) return 0;  // invalid capacity, car isnt allowed to take people
+        carSize = mcar;
 
         // wait for enough passenger to fill up the car
         while (numPassenger < mcar && !button) wait();
-        carSize = mcar;
 
         // button is pressed w/o waiting for enough passenger to fill up the car
-        if (button) {
+        if (button && numPassenger < mcar) {
             mcar = numPassenger; // car capacity is restricted to numPassenger
         }
 

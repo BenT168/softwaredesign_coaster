@@ -16,6 +16,7 @@ public class ControllerPartI {
 
     public ControllerPartI(NumberCanvas nc) {
         passengers = nc;
+        numPassenger = 0;
     }
 
     public synchronized void newPassenger() throws InterruptedException {
