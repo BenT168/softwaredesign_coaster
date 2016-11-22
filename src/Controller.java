@@ -13,23 +13,41 @@ public class Controller {
     //Boolean allowing car to leave early
     protected boolean button = false;
 
+    //Lock object
+    private final Object lock = new Object();
+    private final Object entryLock = new Object();
+
     public Controller(NumberCanvas nc) {
         passengers = nc;
         numPassenger = 0;
     }
 
     public void newPassenger() throws InterruptedException {
-        while (numPassenger >= Max) wait(); // wait if platform is fully accommodated
+        while (numPassenger >= Max) {
+            synchronized (lock){
+                // wait if platform is fully accommodated
+                lock.wait();
+            }
+        }
         numPassenger++; // increment number of waiting passengers
         passengers.setValue(numPassenger); // update displayed passenger's number
-        notifyAll(); // notify others that a new waiting passenger is added
+        synchronized (lock){
+            // notify others that a new waiting passenger is added
+            lock.notifyAll();
+        }
+
     }
 
     public int getPassengers(int mcar) throws InterruptedException{
         if (mcar < 0) return 0;  // neg invalid capacity, isnt allowed to take people
 
-        // wait for enough passenger to fill up the car
-        while (numPassenger < mcar && !button) wait();
+        // button is not pressed & the waiting passenger is less than the car capacity
+        while (numPassenger < mcar && !button) {
+            synchronized (entryLock){
+                // wait for enough passenger to fill up the car
+                entryLock.wait();
+            }
+        }
 
         // button is pressed w/o waiting for enough passenger to fill up the car
         if (button && numPassenger < mcar) {
@@ -39,14 +57,20 @@ public class Controller {
         numPassenger -= mcar; // update number of waiting passenger
         button = false; // release the button after being called
         passengers.setValue(numPassenger); // update displayed passenger's number
-        notifyAll(); // notify other that passengers had went on board
+
+        synchronized (lock){
+            lock.notifyAll(); // notify other that passengers had went on board
+        }
+
         return mcar; // return the number of passenger got into the car
     }
 
     public synchronized void goNow() {
         if (numPassenger > 0) { // ensure that there is at least 1 passenger
             button = true; // signify that button is pressed
-            notifyAll(); // notify other that the car can go now
+            synchronized (lock){
+                lock.notifyAll(); // notify other that the car can go now
+            }
         }
     }
 
