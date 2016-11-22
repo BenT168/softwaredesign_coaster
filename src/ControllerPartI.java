@@ -1,3 +1,7 @@
+/**
+ * Complete the implementation of this class in line with the FSP model
+ */
+
 import display.NumberCanvas;
 
 public class ControllerPartI {
@@ -10,43 +14,24 @@ public class ControllerPartI {
     //Current number of passengers on the platform
     protected int numPassenger;
 
-    //Lock object
-    private final Object controllerLock = new Object();
-
     public ControllerPartI(NumberCanvas nc) {
         passengers = nc;
-        numPassenger = 0;
     }
 
-    public void newPassenger() throws InterruptedException {
-        while (numPassenger >= Max) {
-            synchronized (controllerLock){
-                // wait if platform is fully accommodated
-                controllerLock.wait();
-            }
-        }
+    public synchronized void newPassenger() throws InterruptedException {
+        while (numPassenger >= Max) wait(); // wait if platform is fully accommodated
         numPassenger++; // increment number of waiting passengers
         passengers.setValue(numPassenger); // update displayed passenger's number
-        synchronized (controllerLock){
-            // notify others that a new waiting passenger is added
-            controllerLock.notifyAll();
-        }
+        notifyAll(); // notify others that a new waiting passenger is added
     }
 
-    public int getPassengers(int mcar) throws InterruptedException{
-        if (mcar < 0) return 0; // neg invalid capacity, isnt allowed to take people
-        while (numPassenger < mcar) {
-            synchronized (controllerLock){
-                // wait for enough passenger to fill up the car
-                controllerLock.wait();
-            }
-        }
+    public synchronized int getPassengers(int mcar) throws InterruptedException{
+        if (mcar <= 0) return 0; // invalid capacity, car isnt allowed to take people
+        while (numPassenger < mcar) wait(); // wait 4 enough passenger to fill up car
         numPassenger -= mcar; // update number of waiting passenger
         passengers.setValue(numPassenger); // update displayed passenger's number
-        synchronized (controllerLock){
-            controllerLock.notifyAll(); // notify other passengers had went on board
-        }
+        notifyAll(); // notify other that passengers had went on board
         return mcar; // return the number of passenger got into the car
     }
-}
 
+}
