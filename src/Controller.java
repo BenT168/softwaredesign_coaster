@@ -14,6 +14,7 @@ public class Controller {
     protected boolean button = false;
 
     //Lock object
+    private final Object entryLock = new Object();
     private final Object controllerLock = new Object();
 
     public Controller(NumberCanvas nc) {
@@ -23,9 +24,9 @@ public class Controller {
 
     public void newPassenger() throws InterruptedException {
         while (numPassenger >= Max) {
-            synchronized (controllerLock){
+            synchronized (entryLock){
                 // wait if platform is fully accommodated
-                controllerLock.wait();
+                entryLock.wait();
             }
         }
         numPassenger++; // increment number of waiting passengers
@@ -56,8 +57,9 @@ public class Controller {
         button = false; // release the button after being called
         passengers.setValue(numPassenger); // update displayed passenger's number
 
-        synchronized (controllerLock){
-            controllerLock.notifyAll(); // notify other that passengers had went on board
+        synchronized (entryLock){
+            //Awaken entry lock since there is now space on the platform
+            entryLock.notifyAll();
         }
 
         return mcar; // return the number of passenger got into the car
